@@ -3,12 +3,12 @@ pragma solidity ^0.8.13;
 
 import {Test, console2, stdJson} from "../lib/forge-std/src/Test.sol";
 
-import {Merkle} from "../src/1155Token.sol";
+import {MyToken} from "../src/1155Token.sol";
 
 contract TokenTest is Test {
     using stdJson for string;
 
-    Merkle public merkle;
+    MyToken public myToken;
 
     struct Result {
         bytes32 leaf;
@@ -27,7 +27,7 @@ contract TokenTest is Test {
     address user1 = 0xB07C11Fd18fF263A4859c10b3c2D26565d74C9eB;
 
     function setUp() public {
-        merkle = new Merkle(root);
+        myToken = new MyToken(root);
         string memory _root = vm.projectRoot();
         string memory path = string.concat(_root, "/merkle_tree.json");
 
@@ -45,20 +45,20 @@ contract TokenTest is Test {
     }
 
     function testClaimed() public {
-        bool success = merkle.claim(user.user, user.tokenId, user.amount, result.proof);
+        bool success = myToken.claim(user.user, user.tokenId, user.amount, result.proof);
         assertTrue(success);
     }
 
     function testAlreadyClaimed() public {
-        merkle.claim(user.user, user.tokenId, user.amount, result.proof);
+        myToken.claim(user.user, user.tokenId, user.amount, result.proof);
         vm.expectRevert("already claimed");
-        merkle.claim(user.user, user.tokenId, user.amount, result.proof);
+        myToken.claim(user.user, user.tokenId, user.amount, result.proof);
     }
 
     function testIncorrectProof() public {
         bytes32[] memory fakeProofleaveitleaveit;
 
         vm.expectRevert("not whitelisted");
-        merkle.claim(user.user, user.tokenId, user.amount, fakeProofleaveitleaveit);
+        myToken.claim(user.user, user.tokenId, user.amount, fakeProofleaveitleaveit);
     }
 }

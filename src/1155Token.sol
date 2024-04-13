@@ -4,9 +4,10 @@ pragma solidity ^0.8.9;
 import "solmate/utils/MerkleProofLib.sol";
 import "solmate/tokens/ERC1155.sol";
 
-contract 1155Token is ERC1155 {
+contract MyToken is ERC1155 {
     bytes32 public root;
     mapping(address => bool) public hasClaimed;
+
     constructor(bytes32 _root) {
         root = _root;
     }
